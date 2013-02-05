@@ -3,17 +3,7 @@ vraca stupac u koji treba ubaciti zeton.
 argument poziva - primjer: y01 y02 o03 o01
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define WIDTH 7
-#define HEIGHT 6
-#define ORANGE_WINS  1000000
-#define YELLOW_WINS -1000000
-#define ORANGE 1
-#define YELLOW -1
-#define BARREN 0
+#include "minmax.h"
 
 int g_maxDepth = 7;
 
@@ -145,7 +135,7 @@ void abMinimax(int maximizeOrMinimize, int color, int depth, int board[][WIDTH],
     *score = bestScore;
 }
 
-int main(int argc, char *argv[])
+int minMax(int argc, char *argv[])
 {
     int board[HEIGHT][WIDTH];
     memset(board, 0, sizeof(board));
@@ -169,5 +159,10 @@ int main(int argc, char *argv[])
             exit(-1);
         }
     }
+		/* TODO
+		*  Treba vratiti potez (INT) potez = -1 pobjedila aplikacija
+		*                            pozez = -2 pobjedio igrac
+		*/
+
     return 0;
 }

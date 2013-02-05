@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <pthread.h>
-#include "../../algorithm/minmax.h"
+#include "../../algorithms/minmax.h"
 // the default server port
 #define	DEFAULT_PORT	64201
 

@@ -101,10 +101,10 @@ short int newInstanceAlgorithm(int sockfd) {
 		*  Instanca servera je primila novi potez i poznaje trenutno stanje ploce treba ubaciti 
 		*  novi potez u plocu i pozvati algotitam na novonastaloj ploci.
 		*/
+			// newMove = minmax( TODO to treba )
 
-		/* TODO
-		*  Pretvoriti novi potez u oblik za slanje poruke pomoću buffer-a
-		*/
+		value = newMove + '0';
+		buffer[0] = value;
 		
 		// Send: server's new move
 		returnValue = send(sockfd, buffer, strlen(buffer), 0);

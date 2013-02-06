@@ -1,8 +1,3 @@
-/*prilikom poziva se unosi kako izgleda tablica, y-igrac, o-aplikacija, 12-stupacredak.
-vraca stupac u koji treba ubaciti zeton.
-argument poziva - primjer: y01 y02 o03 o01
-*/
-
 #include "minmax.h"
 
 int g_maxDepth = 7;
@@ -76,9 +71,11 @@ int dropDisk(int board[][WIDTH], int column, int color)
     return -1;
 }
 
+
+
 int g_debug = 0;
 
-void loadBoard(int argc, char *argv[], int board[][WIDTH]) 
+void loadBoard(int argc, char *argv[], int board[][WIDTH])
 {
     int i;
     for(i=1; i<argc; i++)
@@ -114,7 +111,7 @@ void abMinimax(int maximizeOrMinimize, int color, int depth, int board[][WIDTH],
             scoreInner = s;
         }
         board[rowFilled][column] = BARREN;
-        /* kad je siguran ishod prekini petlju */
+        /* kad je siguran ishod prekini petlju, i jos neke pomocne funkcije koje nisu u svrhu izvrsavanja petlje */
         if (scoreInner == ORANGE_WINS || scoreInner == YELLOW_WINS)
             scoreInner -= depth * (int)color;
         if (depth == g_maxDepth && g_debug)
@@ -137,32 +134,20 @@ void abMinimax(int maximizeOrMinimize, int color, int depth, int board[][WIDTH],
 
 int minMax(int argc, char *argv[])
 {
-    int board[HEIGHT][WIDTH];
-    memset(board, 0, sizeof(board));
-
-    loadBoard(argc, argv, board);
-    int scoreOrig = ScoreBoard(board);
-    if (scoreOrig == ORANGE_WINS) { puts("Aplikacija pobjeduje\n"); exit(-1); }
-    else if (scoreOrig == YELLOW_WINS) { puts("korisnik pobjeduje\n"); exit(-1); }
-    else {
-        int move, score;
-        abMinimax(1,ORANGE,g_maxDepth,board,&move,&score);
-        if (move != -1) {
-            printf("%d\n",move);
-            dropDisk(board, move, ORANGE);
-            scoreOrig = ScoreBoard(board);
-            if (scoreOrig == ORANGE_WINS) { puts("Aplikacija pobjeduje\n"); exit(-1); }
-            else if (scoreOrig == YELLOW_WINS) { puts("Korisnik pobjeduje\n"); exit(-1); }
-            else exit(0);
-        } else {
-            puts("Nema moguceg poteza!");
-            exit(-1);
-        }
-    }
-		/* TODO
-		*  Treba vratiti potez (INT) potez = -1 pobjedila aplikacija
-		*                            pozez = -2 pobjedio igrac
-		*/
-
-    return 0;
+    
+	int scoreOrig = ScoreBoard(board);
+	if (scoreOrig == YELLOW_WINS) return -2; //provjera pobjede korisnika
+	else 
+	{
+        	int move, score;
+        	abMinimax(1,ORANGE,g_maxDepth,board,&move,&score);
+        	if (move != -1) 
+        	{
+            		dropDisk(board, move, ORANGE);
+            		scoreOrig = ScoreBoard(board);
+			if (scoreOrig == ORANGE_WINS) return -1; //provjera pobjede aplikacije
+            		else return move; //vraca potez
+        	}
+        	else return -3; //partija zavrsava nerjeseno
+	}
 }

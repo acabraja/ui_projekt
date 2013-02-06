@@ -17,7 +17,7 @@ typedef struct{
 	int sock;
 }Data;
 
-void serverInstance(Data *const data)
+void *serverInstance(Data *const data)
 {
 	if(newInstanceAlgorithm(data->sock) == -1);
 }
@@ -69,10 +69,11 @@ short int newInstanceAlgorithm(int sockfd) {
 	short int message = 1;
 	char returnValue = 0;
 	int newMove;
-	int board[6][7]; // TODO get define value 
-	
+	int board[HEIGHT][WIDTH]; // TODO get define value 
+  int in_col[HEIGHT];	
 	// init empty board
 	memset(board, 0, sizeof(board)); 
+	memset(in_col, 0, sizeof(in_col));
 	
 	while(1){
 		// erase the buffer
@@ -97,15 +98,16 @@ short int newInstanceAlgorithm(int sockfd) {
 		// Call algorithm
 		char value = buffer[0];	
 		newMove = atoi(&value);
-		/* TODO
-		*  Instanca servera je primila novi potez i poznaje trenutno stanje ploce treba ubaciti 
-		*  novi potez u plocu i pozvati algotitam na novonastaloj ploci.
-		*/
-			// newMove = minmax( TODO to treba )
+		board[newMove][in_col[newMove]++] = YELLOW;
+		
+		//newMove = minmax(board); 
+		/* saljem plocu board sa trenutnim stanjem i ocekujem povratno gdje ubaciti novi potez*/
 
 		value = newMove + '0';
 		buffer[0] = value;
 		
+		board[newMove][in_col[newMove]++] = ORANGE;
+
 		// Send: server's new move
 		returnValue = send(sockfd, buffer, strlen(buffer), 0);
 		if (returnValue<=0){

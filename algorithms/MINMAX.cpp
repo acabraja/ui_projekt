@@ -1,10 +1,11 @@
 #include"MINMAX.h"
 
 //heuristika
-int heuristika(int ploca[6][7])
+int heuristika(int ploca[6][7],int r,int s,int igrac)
 {
 	int procjena = 0;
 	int suma = 0;
+	ploca[r][s] = igrac;
 	int suprotnaFigura,granicaLijevo,granicaDesno,granicaGore,granicaDolje,prvaStrana,drugaStrana;
 	for(int i = 0; i < 6;i++)
 	{
@@ -38,13 +39,13 @@ int heuristika(int ploca[6][7])
                 prvaStrana = 0;
                 for (int k = 1; k <= granicaLijevo; k++)
                 {
-					if (ploca[i][j - k] == suprotnaFigura) break;
+					if (ploca[5-i][j - k] == suprotnaFigura) break;
                     prvaStrana++;
                 }
                 drugaStrana = 0;
                 for (int k = 1; k <= granicaDesno; k++)
                 {
-					if (ploca[i][j + k] == suprotnaFigura) break;
+					if (ploca[5-i][j + k] == suprotnaFigura) break;
                     drugaStrana++;
                 }
                 if (prvaStrana == 3 && drugaStrana == 3) suma += 4;
@@ -56,13 +57,13 @@ int heuristika(int ploca[6][7])
                 prvaStrana = 0;
                 for (int k = 1; k <= granicaGore; k++)
                 {
-					if (ploca[i - k][j] == suprotnaFigura) break;
+					if (ploca[5 - i - k][j] == suprotnaFigura) break;
                     prvaStrana++;
                 }
                 drugaStrana = 0;
                 for (int k = 1; k <= granicaDolje; k++)
                 {
-					if (ploca[i + k][j] == suprotnaFigura) break;
+					if (ploca[5 - i + k][j] == suprotnaFigura) break;
                     drugaStrana++;
                 }
                 if (prvaStrana == 3 && drugaStrana == 3) suma += 4;
@@ -74,13 +75,13 @@ int heuristika(int ploca[6][7])
                 prvaStrana = 0;
                 for (int k = 1; (k <= granicaDesno) && (k <= granicaGore); k++)
                 {
-					if (ploca[i - k][j + k] == suprotnaFigura) break;
+					if (ploca[5 - i - k][j + k] == suprotnaFigura) break;
                     prvaStrana++;
                 }
                 drugaStrana = 0;
                 for (int k = 1; (k <= granicaLijevo) && (k <= granicaDolje); k++)
                 {
-					if (ploca[i + k][j - k] == suprotnaFigura) break;
+					if (ploca[5 - i + k][j - k] == suprotnaFigura) break;
                     drugaStrana++;
                 }
                 if (prvaStrana == 3 && drugaStrana == 3) suma += 4;
@@ -92,13 +93,13 @@ int heuristika(int ploca[6][7])
                 prvaStrana = 0;
                 for (int k = 1; (k <= granicaLijevo) && (k <= granicaGore); k++)
                 {
-					if (ploca[i - k][j - k] == suprotnaFigura) break;
+					if (ploca[5 - i - k][j - k] == suprotnaFigura) break;
                     prvaStrana++;
                 }
                 drugaStrana = 0;
                 for (int k = 1; (k <= granicaDesno) && (k <= granicaDolje); k++)
                 {
-					if (ploca[i + k][j + k] == suprotnaFigura) break;
+					if (ploca[5 - i + k][j + k] == suprotnaFigura) break;
                     drugaStrana++;
                 }
                 if (prvaStrana == 3 && drugaStrana == 3) suma += 4;
@@ -111,9 +112,9 @@ int heuristika(int ploca[6][7])
                 }
             }
         }
+		ploca[r][s] = 0;
         return procjena;
 }
-
 
 bool ispitajPobjedu(int ploca[6][7],int figura)
 {
@@ -167,7 +168,7 @@ bool ispitajPobjedu(int ploca[6][7],int figura)
             }
 			if(brojFigura == 4) return true;
 		}
-            return false;
+         return false;
 }
 
 vector< pair<int,int> > pronadiPoteze(int ploca[6][7])
@@ -188,32 +189,64 @@ vector< pair<int,int> > pronadiPoteze(int ploca[6][7])
 	return potezi;
 }
 
+
+
  int MaxCvor(int ploca[6][7],int r,int s,int* alfa, int* beta, int dubina)
 {
 	ploca[r][s] = -1;
-	if(ispitajPobjedu(ploca,-1)) return (-673) * (dubina + 1);
-	if (dubina == 0) return heuristika(ploca);
+	if(ispitajPobjedu(ploca,-1))
+	{
+		ploca[r][s] = 0;
+		return (-673) * (dubina + 1);
+	}
+	if (dubina == 0)
+	{
+		ploca[r][s] = 0;
+		return heuristika(ploca,r,s,-1);
+	}
 	vector<pair<int,int> > potezi = pronadiPoteze(ploca);
-	if (potezi.size() == 0) return heuristika(ploca);
+	if (potezi.size() == 0)
+	{
+		ploca[r][s] = 0;
+		return heuristika(ploca,r,s,-1);
+	}
 	dubina--;
 	int cvorVrijednost, temp;
     cvorVrijednost = *alfa;
     for(int i = 0; i < potezi.size(); i++)
     {
 		temp = MinCvor(ploca,potezi[i].first,potezi[i].second,&cvorVrijednost, beta, dubina);
+		ploca[r][s] = 0;
 		if (temp > cvorVrijednost) cvorVrijednost = temp;  //minimax
-		if (cvorVrijednost >= *beta) return cvorVrijednost; //beta podrezivanje
+		if (cvorVrijednost >= *beta)
+		{
+			ploca[r][s] = 0;
+			return cvorVrijednost; //beta podrezivanje
+		}
 	}
+	ploca[r][s] = 0;
 	return cvorVrijednost;
 }
 
 int MinCvor(int ploca[6][7],int r,int s, int* alfa, int* beta, int dubina)
 {
 	ploca[r][s] = 1;
-	if (ispitajPobjedu(ploca,1)) return (673) * (dubina + 1);
-	if (dubina == 0) return heuristika(ploca);
+	if (ispitajPobjedu(ploca,1))
+	{
+		ploca[r][s] = 0;
+		return (673) * (dubina + 1);
+	}
+	if (dubina == 0)
+	{
+		ploca[r][s] = 0;
+		return heuristika(ploca,r,s,1);
+	}
 	vector<pair<int,int> > potezi = pronadiPoteze(ploca);
-	if (potezi.size() == 0) return heuristika(ploca);
+	if (potezi.size() == 0)
+	{
+		ploca[r][s] = 0;
+		return heuristika(ploca,r,s,1);
+	}
 	dubina--;
 	int cvorVrijednost, temp;
 	cvorVrijednost = *beta;
@@ -222,8 +255,13 @@ int MinCvor(int ploca[6][7],int r,int s, int* alfa, int* beta, int dubina)
 	{
 		temp = MaxCvor(ploca,potezi[i].first,potezi[i].second, alfa, &cvorVrijednost, dubina);
 		if (temp < cvorVrijednost) cvorVrijednost = temp;   //minimax
-		if (cvorVrijednost <= *alfa) return cvorVrijednost;  //alfa podrezivanje
+		if (cvorVrijednost <= *alfa)
+		{
+			ploca[r][s] = 0;
+			return cvorVrijednost;  //alfa podrezivanje
+		}
 	}
+	ploca[r][s] = 0;
 	return cvorVrijednost;
 }
 
@@ -236,17 +274,17 @@ int potez(int ploca[6][7],int dubina)
 	int cvor[2] = {0,9};
 	korijenVrijednost = INT_MIN;
 	vector<pair<int,int> > potezi = pronadiPoteze(ploca);
-	for(int j = 0;j < potezi.size(); j++) //cout<<potezi[j].second<<endl;
+	//for(int j = 0;j < potezi.size(); j++) cout<<potezi[j].second<<endl;
 	int i;
 	int alfa = INT_MIN;
 	int beta = INT_MAX;
-	for(int i = 0;i < potezi.size(); i++)
+	for(i = 0;i < potezi.size(); i++)
 	{
 		ploca[potezi[i].first][potezi[i].second] = -1;
 		if(ispitajPobjedu(ploca,-1)) return potezi[i].second;
 		ploca[potezi[i].first][potezi[i].second] = 0;
 	}
-	for(int i = 0; i < potezi.size(); i++)
+	for(i = 0;i < potezi.size(); i++)
 	{
 		temp = MinCvor(ploca,potezi[i].first,potezi[i].second,&alfa,&beta,dubina);
 		if(temp > korijenVrijednost)
@@ -283,3 +321,5 @@ int MinMaxAlfaBeta(int ploca[6][7])
 	if(ispitajPobjedu(ploca,-1)) return 7;
 	return potez(ploca,dubina);
 }
+
+

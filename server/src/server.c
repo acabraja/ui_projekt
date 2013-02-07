@@ -70,7 +70,7 @@ short int newInstanceAlgorithm(int sockfd) {
 	short int message = 1;
 	char returnValue = 0;
 	int newMove;
-	int board[HEIGHT][WIDTH]; // TODO get define value 
+	int board[HEIGHT][WIDTH];  
   int in_col[WIDTH];	
 	// init empty board
 	memset(board, 0, sizeof(board)); 
@@ -99,28 +99,19 @@ short int newInstanceAlgorithm(int sockfd) {
 		// Call algorithm
 		char value = buffer[0];	
 		newMove = atoi(&value);
-		board[5 - in_col[newMove]++][newMove] = YELLOW;
-	int i, j;
-	printf("\n\t0\t1\t2\t3\t4\t5\t6\n");
-	printf("      ----------------------------------------------------- \n");
-	for (i = 0; i < HEIGHT; i++)
-	{
-		printf("\t");
-		for(j = 0; j < WIDTH; j++)
-			printf("%d\t", board[i][j]);
-		printf("\n\n");
-	}
-
-		//printf("\nPrimio sam %d",newMove);
-		//newMove =MinMaxAlfaBeta(board);
-		newMove = minMax(board);
-		/* saljem plocu board sa trenutnim stanjem i ocekujem povratno gdje ubaciti novi potez*/
-		//printf("\n Saljem %d",newMove);
+		
+		//board[5 - in_col[newMove]++][newMove] = YELLOW; // Marko
+	  board[in_col[newMove]++][newMove] = YELLOW;   // Anamarija
+	  
+		newMove =MinMaxAlfaBeta(board); // Anamarija
+		//newMove = minMax(board);
+		
 		value = newMove + '0';
 		buffer[0] = value;
 		
-		board[5 - in_col[newMove]++][newMove] = ORANGE;
-
+		//board[5 - in_col[newMove]++][newMove] = ORANGE; // Marko
+    board[in_col[newMove]++][newMove] = ORANGE;   // Anamarija
+		
 		// Send: server's new move
 		returnValue = send(sockfd, buffer, strlen(buffer), 0);
 		if (returnValue<=0){

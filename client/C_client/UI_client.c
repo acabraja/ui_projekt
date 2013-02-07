@@ -83,7 +83,7 @@ int povuci_potez(int sock, char ploca[6][7])
 	}
 
 	odgovor = primiPoruku(sock);
-	printf("\n Odgovor: %d \n",odgovor);
+	//printf("\n Odgovor: %d \n",odgovor);
 
 	if(odgovor < 0 )
 	{

@@ -100,7 +100,7 @@ short int newInstanceAlgorithm(int sockfd) {
 		newMove = atoi(&value);
 		board[newMove][in_col[newMove]++] = YELLOW;
 		
-		//newMove = minmax(board); 
+		newMove = minMax(board); 
 		/* saljem plocu board sa trenutnim stanjem i ocekujem povratno gdje ubaciti novi potez*/
 
 		value = newMove + '0';

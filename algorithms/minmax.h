@@ -10,4 +10,4 @@
 #define YELLOW -1
 #define BARREN 0
 
-int minMax(int argc, char *argv[]);
+int minMax(int board[][WIDTH]);

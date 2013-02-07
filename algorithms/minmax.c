@@ -132,7 +132,7 @@ void abMinimax(int maximizeOrMinimize, int color, int depth, int board[][WIDTH],
     *score = bestScore;
 }
 
-int minMax(int argc, char *argv[])
+int minMax(int board[][WIDTH])
 {
     
 	int scoreOrig = ScoreBoard(board);

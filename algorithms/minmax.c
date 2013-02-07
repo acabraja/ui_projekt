@@ -145,7 +145,7 @@ int minMax(int board[][WIDTH])
         	{
             		dropDisk(board, move, ORANGE);
             		scoreOrig = ScoreBoard(board);
-			if (scoreOrig == ORANGE_WINS) AGENT_WIN; //provjera pobjede aplikacije
+			if (scoreOrig == ORANGE_WINS) return AGENT_WIN; //provjera pobjede aplikacije
             		else return move; //vraca potez
         	}
         	else return DRAW; //partija zavrsava nerjeseno

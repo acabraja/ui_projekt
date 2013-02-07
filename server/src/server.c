@@ -70,14 +70,14 @@ short int newInstanceAlgorithm(int sockfd) {
 	char returnValue = 0;
 	int newMove;
 	int board[HEIGHT][WIDTH]; // TODO get define value 
-  int in_col[HEIGHT];	
+  int in_col[WIDTH];	
 	// init empty board
 	memset(board, 0, sizeof(board)); 
 	memset(in_col, 0, sizeof(in_col));
 	
 	while(1){
 		// erase the buffer
-		memset(buffer,0,1024);
+		memset(buffer, 0, 1024);
 		
 		// Recive: client's new move 
 		returnValue = recv(sockfd, buffer, 1023, 0);
@@ -88,25 +88,26 @@ short int newInstanceAlgorithm(int sockfd) {
 
 		// check for shutdown message
 		// we'll need a more secure shutdown method in the future...
-		if (strcmp(buffer,"close") == 0) {
+		/*if (buffer[0] == 'C') {
 			printf("\nReceiving closing message...\nClosing forked subprocess %d\n\n",getpid());
 			message = -1;
 			close(sockfd);
 			break;
-		}
+		}*/
 
 		// Call algorithm
 		char value = buffer[0];	
 		newMove = atoi(&value);
-		board[newMove][in_col[newMove]++] = YELLOW;
+		board[5 - in_col[newMove]++][newMove] = YELLOW;
 		
+		//printf("\nPrimio sam %d",newMove);
 		newMove = minMax(board); 
 		/* saljem plocu board sa trenutnim stanjem i ocekujem povratno gdje ubaciti novi potez*/
-
+		//printf("\n Saljem %d",newMove);
 		value = newMove + '0';
 		buffer[0] = value;
 		
-		board[newMove][in_col[newMove]++] = ORANGE;
+		board[5 - in_col[newMove]++][newMove] = ORANGE;
 
 		// Send: server's new move
 		returnValue = send(sockfd, buffer, strlen(buffer), 0);

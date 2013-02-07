@@ -9,5 +9,8 @@
 #define ORANGE 1
 #define YELLOW -1
 #define BARREN 0
+#define PLAYER_WIN 7
+#define AGENT_WIN 8
+#define DRAW 9
 
 int minMax(int board[][WIDTH]);

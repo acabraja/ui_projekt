@@ -99,7 +99,7 @@ short int newInstanceAlgorithm(int sockfd) {
 		// Call algorithm
 		char value = buffer[0];	
 		newMove = atoi(&value);
-		board[ in_col[newMove]++][newMove] = YELLOW;
+		board[5 - in_col[newMove]++][newMove] = YELLOW;
 	int i, j;
 	printf("\n\t0\t1\t2\t3\t4\t5\t6\n");
 	printf("      ----------------------------------------------------- \n");
@@ -112,13 +112,14 @@ short int newInstanceAlgorithm(int sockfd) {
 	}
 
 		//printf("\nPrimio sam %d",newMove);
-		newMove =MinMaxAlfaBeta(board); 
+		//newMove =MinMaxAlfaBeta(board);
+		newMove = minMax(board);
 		/* saljem plocu board sa trenutnim stanjem i ocekujem povratno gdje ubaciti novi potez*/
 		//printf("\n Saljem %d",newMove);
 		value = newMove + '0';
 		buffer[0] = value;
 		
-		board[ in_col[newMove]++][newMove] = ORANGE;
+		board[5 - in_col[newMove]++][newMove] = ORANGE;
 
 		// Send: server's new move
 		returnValue = send(sockfd, buffer, strlen(buffer), 0);

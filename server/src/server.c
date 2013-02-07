@@ -6,6 +6,7 @@
 #include <netinet/in.h>
 #include <pthread.h>
 #include "../../algorithms/minmax.h"
+#include "../../algorithms/MINMAX.h"
 // the default server port
 #define	DEFAULT_PORT	64201
 
@@ -19,7 +20,7 @@ typedef struct{
 
 void *serverInstance(Data *const data)
 {
-	if(newInstanceAlgorithm(data->sock) == -1);
+	newInstanceAlgorithm(data->sock);
 }
 
 // startServer()
@@ -88,26 +89,36 @@ short int newInstanceAlgorithm(int sockfd) {
 
 		// check for shutdown message
 		// we'll need a more secure shutdown method in the future...
-		/*if (buffer[0] == 'C') {
+		if (strcmp(buffer,"close") == 0) {
 			printf("\nReceiving closing message...\nClosing forked subprocess %d\n\n",getpid());
 			message = -1;
 			close(sockfd);
 			break;
-		}*/
+		}
 
 		// Call algorithm
 		char value = buffer[0];	
 		newMove = atoi(&value);
-		board[5 - in_col[newMove]++][newMove] = YELLOW;
-		
+		board[ in_col[newMove]++][newMove] = YELLOW;
+	int i, j;
+	printf("\n\t0\t1\t2\t3\t4\t5\t6\n");
+	printf("      ----------------------------------------------------- \n");
+	for (i = 0; i < HEIGHT; i++)
+	{
+		printf("\t");
+		for(j = 0; j < WIDTH; j++)
+			printf("%d\t", board[i][j]);
+		printf("\n\n");
+	}
+
 		//printf("\nPrimio sam %d",newMove);
-		newMove = minMax(board); 
+		newMove =MinMaxAlfaBeta(board); 
 		/* saljem plocu board sa trenutnim stanjem i ocekujem povratno gdje ubaciti novi potez*/
 		//printf("\n Saljem %d",newMove);
 		value = newMove + '0';
 		buffer[0] = value;
 		
-		board[5 - in_col[newMove]++][newMove] = ORANGE;
+		board[ in_col[newMove]++][newMove] = ORANGE;
 
 		// Send: server's new move
 		returnValue = send(sockfd, buffer, strlen(buffer), 0);
@@ -134,7 +145,7 @@ void waitForConnections(int sockfd) {
 	// listen for connections for...ever (or until we get a shutdown message)
 	for (;;) {
 		// accept the remote connection
-		remoteSocket = accept(sockfd, (struct sockaddr *)&remoteAddress, &remoteAddressSize);
+		remoteSocket = accept(sockfd, (struct sockaddr *)&remoteAddress, (socklen_t*)&remoteAddressSize);
 		
 		// preparetion for thread
 		pth = (pthread_t*)malloc(sizeof(pthread_t));

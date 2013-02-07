@@ -55,9 +55,9 @@ void posaljiPoruku(int sock, int poruka)
 int povuci_potez(int sock, char ploca[6][7])
 {
 	int stupac, i, odgovor;
-	char Close[1042];
-	memset(Close, 0, 1024);
-	Close[0] = 'C';
+	char Close[10] = "close";
+	//memset(Close, 0, 1024);
+
 	while(1)
 	{
 		printf("Upisite redni broj stupca (broj u rasponu 0,..,6) \n");
@@ -83,7 +83,7 @@ int povuci_potez(int sock, char ploca[6][7])
 	}
 
 	odgovor = primiPoruku(sock);
-	//printf("\n Odgovor: %d",odgovor);
+	printf("\n Odgovor: %d \n",odgovor);
 
 	if(odgovor < 0 )
 	{
@@ -94,17 +94,17 @@ int povuci_potez(int sock, char ploca[6][7])
 	else{
 		if( odgovor == AGENT_WIN ){
 			printf("Aplikacija je pobjedila\n");
-			//send(sock, Close, sizeof(Close), 0);
+			send(sock, Close, sizeof(Close), 0);
 			return 1;
 		}
 		if( odgovor == PLAYER_WIN ){
 			printf("Igrac je pobjedila\n");
-			//send(sock, Close, sizeof(Close), 0);
+			send(sock, Close, sizeof(Close), 0);
 			return 1;
 		}
 		if(odgovor == DRAW){
 			printf("Nerijeseno\n");
-			//send(sock, Close, sizeof(Close), 0);
+			send(sock, Close, sizeof(Close), 0);
 			return 1;
 		}
 		for (i = 5; i >= 0; i--)

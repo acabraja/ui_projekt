@@ -54,15 +54,24 @@ void posaljiPoruku(int sock, int poruka)
 
 int povuci_potez(int sock, char ploca[6][7])
 {
-	int stupac, i, odgovor;
+	int stupac, i, j, odgovor;
 	char Close[10] = "close";
 	//memset(Close, 0, 1024);
-
+/*  */
+/*  int pom_ploca[6][7];*/
+/*  for(i = 0; i < 6; i++)*/
+/*    for(j = 0; j < 7; j++)*/
+/*    {*/
+/*      if(ploca[i][j] == '-') pom_ploca[5-i][j] = 0;*/
+/*      if(ploca[i][j] == 'O') pom_ploca[5-i][j] = YELLOW;*/
+/*      if(ploca[i][j] == 'X') pom_ploca[5-i][j] = ORANGE;       */
+/*    }*/
+  
 	while(1)
 	{
 		printf("Upisite redni broj stupca (broj u rasponu 0,..,6) \n");
 		scanf("%d", &stupac);
-
+   // stupac = minMax(pom_ploca); 
 		if(stupac < 0 || stupac > 7)
 		{
 			printf("Nemoguc unos. pokusajte ponovo \n");

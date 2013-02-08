@@ -100,17 +100,17 @@ short int newInstanceAlgorithm(int sockfd) {
 		char value = buffer[0];	
 		newMove = atoi(&value);
 		
-		//board[5 - in_col[newMove]++][newMove] = YELLOW; // Marko
-	  board[in_col[newMove]++][newMove] = YELLOW;   // Anamarija
+		board[5 - in_col[newMove]++][newMove] = YELLOW; // Marko
+	  //board[in_col[newMove]++][newMove] = YELLOW;   // Anamarija
 	  
-		newMove =MinMaxAlfaBeta(board); // Anamarija
-		//newMove = minMax(board);
+		//newMove =MinMaxAlfaBeta(board); // Anamarija
+		newMove = minMax(board);
 		
 		value = newMove + '0';
 		buffer[0] = value;
 		
-		//board[5 - in_col[newMove]++][newMove] = ORANGE; // Marko
-    board[in_col[newMove]++][newMove] = ORANGE;   // Anamarija
+		board[5 - in_col[newMove]++][newMove] = ORANGE; // Marko
+    //board[in_col[newMove]++][newMove] = ORANGE;   // Anamarija
 		
 		// Send: server's new move
 		returnValue = send(sockfd, buffer, strlen(buffer), 0);
